@@ -11,7 +11,9 @@ class TinydealItem(scrapy.Item):
     TITLE_GOODS = scrapy.Field(
         output_processor=TakeFirst()
     )
-    IMAGE_GOODS = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
+
     URL_PRODUCT = scrapy.Field()
     START_PRICE = scrapy.Field()
     DISCO_PRICE = scrapy.Field()

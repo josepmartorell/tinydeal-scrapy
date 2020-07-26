@@ -68,6 +68,10 @@ ROBOTSTXT_OBEY = True
 #    'tinydeal.pipelines.TinydealPipeline': 300,
 #}
 
+ITEM_PIPELINES = {'scrapy.pipelines.images.ImagesPipeline': 1}
+IMAGES_STORE = '/home/jtech/Pictures/tinydeal'
+DOWNLOAD_TIMEOUT = 1200
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

@@ -23,14 +23,14 @@ class SpecialOffersSpider(scrapy.Spider):
         for product in response.xpath("//ul[@class='productlisting-ul']/div/li"):
             loader = ItemLoader(item=TinydealItem(), selector=product)
             loader.add_xpath('TITLE_GOODS', ".//a[@class='p_box_title']/text()")
-            loader.add_xpath('IMAGE_GOODS', ".//a[@class='p_box_img']/img/@data-original")
-            loader.add_xpath('URL_PRODUCT', ".//a[@class='p_box_title']/@src")
+            loader.add_xpath('image_urls', ".//a[@class='p_box_img']/img/@data-original")
+            loader.add_xpath('URL_PRODUCT', ".//a[@class='p_box_title']/@href")
             loader.add_xpath('START_PRICE', ".//div[@class='p_box_price']/span[2]/text()")
             loader.add_xpath('DISCO_PRICE', ".//div[@class='p_box_price']/span[1]/text()")
-            loader.add_xpath('STARS_RATED', ".//div[@class='p_box_star']/span/@class".strip('pstar s_star_'))
+            loader.add_xpath('STARS_RATED', ".//div[@class='p_box_star']/span/@class")
             yield loader.load_item()
-        next_page = response.xpath("//a[@class='nextPage']/@href").get()
 
+        next_page = response.xpath("//a[@class='nextPage']/@href").get()
         if next_page:
             yield scrapy.Request(url=next_page, callback=self.parse, headers={
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '

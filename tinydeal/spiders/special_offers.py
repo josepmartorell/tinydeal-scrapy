@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from scrapy.loader import ItemLoader
+from tinydeal.items import TinydealItem
 
 
 class SpecialOffersSpider(scrapy.Spider):
@@ -19,14 +21,14 @@ class SpecialOffersSpider(scrapy.Spider):
 
     def parse(self, response):
         for product in response.xpath("//ul[@class='productlisting-ul']/div/li"):
-            yield {
-                'TITLE_GOODS': product.xpath(".//a[@class='p_box_title']/text()").get(),
-                'URL_PRODUCT': response.urljoin(product.xpath(".//a[@class='p_box_title']/@href").get()),
-                'START_PRICE': product.xpath(".//div[@class='p_box_price']/span[2]/text()").get(),
-                'DISCO_PRICE': product.xpath(".//div[@class='p_box_price']/span[1]/text()").get(),
-                'STARS_RATED': product.xpath(".//div[@class='p_box_star']/span/@class").get().strip('pstar s_star_')
-            }
-
+            loader = ItemLoader(item=TinydealItem(), selector=product)
+            loader.add_xpath('TITLE_GOODS', ".//a[@class='p_box_title']/text()")
+            loader.add_xpath('IMAGE_GOODS', ".//a[@class='p_box_img']/img/@data-original")
+            loader.add_xpath('URL_PRODUCT', ".//a[@class='p_box_title']/@src")
+            loader.add_xpath('START_PRICE', ".//div[@class='p_box_price']/span[2]/text()")
+            loader.add_xpath('DISCO_PRICE', ".//div[@class='p_box_price']/span[1]/text()")
+            loader.add_xpath('STARS_RATED', ".//div[@class='p_box_star']/span/@class".strip('pstar s_star_'))
+            yield loader.load_item()
         next_page = response.xpath("//a[@class='nextPage']/@href").get()
 
         if next_page:
